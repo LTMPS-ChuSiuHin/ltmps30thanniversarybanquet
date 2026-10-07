@@ -318,11 +318,17 @@
             // ⚠️ 請在此處填入您的 Google Apps Script 網頁應用程式 URL
             const scriptURL = 'https://script.google.com/macros/s/AKfycbxWKHYb1R55ddQRhu3i6dCzC7rh6n3aGaYEiNNlG9NenH0FbMLaLVHEmh7Qo5AadBZ4/exec';
 
+            // 替換這段 fetch 程式碼
             fetch(scriptURL, {
                 method: 'POST',
+                redirect: 'follow', // 允許跟隨 Google 的重新導向 (極重要)
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8' // 使用 text/plain 繞過 CORS 預檢請求
+                },
                 body: JSON.stringify(payload)
             })
             .then(response => response.json())
+            // ... 後面的 .then() 和 .catch() 保持不變
             .then(data => {
                 document.getElementById('loading-overlay').style.display = 'none';
                 if(data.status === 'success') {
