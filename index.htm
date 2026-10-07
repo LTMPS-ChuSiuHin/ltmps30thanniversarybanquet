@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>藍循三十周年校慶晚宴</title>
+    <style>
+        :root {
+            --primary-color: #0033A0; /* 藍循專屬藍色調 */
+            --secondary-color: #FADB5F;
+            --text-color: #333333;
+            --bg-color: #f4f7f6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'PingFang HK', 'Microsoft JhengHei', sans-serif; }
+
+        body {
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            min-height: 80vh;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .page {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(50px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+        }
+
+        /* 首頁設計 */
+        .hero-banner {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-banner h1 {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .info-card {
+            background: #f9fbff;
+            border-left: 5px solid var(--primary-color);
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .info-item strong {
+            width: 80px;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 30px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #002277;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 51, 160, 0.2);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 報名頁設計 */
+        .back-btn {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+            text-align: left;
+            transition: color 0.3s;
+        }
+        
+        .back-btn:hover { color: var(--primary-color); }
+
+        .form-group {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease both;
+        }
+
+        /* 為表單元素加入階層顯示動畫 */
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="file"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .file-upload-wrapper {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px dashed var(--primary-color);
+            text-align: center;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 100;
+            display: none;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 首頁 -->
+        <div id="home-page" class="page active">
+            <div class="hero-banner">
+                <h1>藍循三十周年校慶晚宴</h1>
+                <p>誠邀各位校友、家長及教職員共襄盛舉</p>
+            </div>
+
+            <div class="info-card">
+                <div class="info-item"><strong>日期：</strong>2026年11月27日 (星期五)</div>
+                <div class="info-item"><strong>時間：</strong>下午 7 時正</div>
+                <div class="info-item"><strong>地點：</strong>藍循操場</div>
+                <div class="info-item"><strong>費用：</strong>每位港幣 200 元</div>
+            </div>
+
+            <button class="btn" onclick="switchPage('form-page')" style="margin-top: auto;">立即報名</button>
+        </div>
+
+        <!-- 報名頁面 -->
+        <div id="form-page" class="page">
+            <button class="back-btn" onclick="switchPage('home-page')">← 返回</button>
+            <h2 style="color: var(--primary-color); margin-bottom: 25px;">填寫報名資料</h2>
+
+            <form id="registration-form">
+                <div class="form-group">
+                    <label>中文 / 英文姓名 *</label>
+                    <input type="text" id="name" required placeholder="請輸入姓名">
+                </div>
+                <div class="form-group">
+                    <label>聯絡電話 *</label>
+                    <input type="tel" id="phone" required placeholder="請輸入電話號碼">
+                </div>
+                <div class="form-group">
+                    <label>電郵地址 * (用於接收確認信)</label>
+                    <input type="email" id="email" required placeholder="請輸入有效的電郵地址">
+                </div>
+                
+                <div class="form-group">
+                    <label>第一步：進行付款</label>
+                    <!-- 替換 # 為實際付款連結 (如 PayMe, FPS, Stripe) -->
+                    <a href="#" target="_blank" class="btn btn-outline">開啟付款連結</a>
+                </div>
+
+                <div class="form-group">
+                    <label>第二步：上載付款證明 (截圖/收據) *</label>
+                    <div class="file-upload-wrapper">
+                        <input type="file" id="payment-proof" accept="image/*" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" style="margin-top: 10px;">提交報名</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 載入中畫面 -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <h3 style="margin-top: 20px; color: var(--primary-color);">資料處理中，請稍候...</h3>
+    </div>
+
+    <script>
+        // 頁面切換特效
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // 將檔案轉換為 Base64 格式傳送給 Google Apps Script
+        document.getElementById('registration-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('payment-proof');
+            if (fileInput.files.length === 0) {
+                alert('請上載付款證明！');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                // 移除 base64 字符串開頭的 data:image/png;base64,
+                const base64Data = event.target.result.split(',')[1]; 
+                
+                const payload = {
+                    name: document.getElementById('name').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    fileName: file.name,
+                    mimeType: file.type,
+                    fileData: base64Data
+                };
+
+                submitData(payload);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function submitData(payload) {
+            document.getElementById('loading-overlay').style.display = 'flex';
+
+            // ⚠️ 請在此處填入您的 Google Apps Script 網頁應用程式 URL
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxWKHYb1R55ddQRhu3i6dCzC7rh6n3aGaYEiNNlG9NenH0FbMLaLVHEmh7Qo5AadBZ4/exec';
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                if(data.status === 'success') {
+                    alert('報名成功！我們已發送確認電郵至您的郵箱。');
+                    document.getElementById('registration-form').reset();
+                    switchPage('home-page');
+                } else {
+                    alert('發生錯誤，請稍後再試。');
+                }
+            })
+            .catch(error => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                alert('系統繁忙或連線錯誤，請確定已正確設定後端連結。');
+                console.error('Error!', error.message);
+            });
+        }
+    </script>
+</body>
+</html>
