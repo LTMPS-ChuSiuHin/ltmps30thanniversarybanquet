@@ -118,14 +118,33 @@
         .form-group { margin-bottom: 18px; }
         label { display: block; font-weight: bold; color: #444; font-size: 14px; margin-bottom: 8px; }
         
-        /* 表單輸入框字體設定為 16px，完美防止 iOS 縮放 */
+        /* 輸入框與選擇框精確對齊設定 */
         input[type="text"], input[type="tel"], input[type="email"], select { 
-            width: 100%; padding: 14px; border: 1.5px solid #dce2e8; border-radius: 12px; 
-            font-size: 16px; background: #fdfdfd; transition: all 0.3s; 
-            -webkit-appearance: none; /* 移除 iOS 預設樣式 */
+            width: 100%; 
+            max-width: 100%;
+            display: block;
+            box-sizing: border-box; /* 確保 padding 不會撐破寬度 */
+            padding: 14px 15px; 
+            border: 1.5px solid #dce2e8; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            background: #fdfdfd; 
+            transition: all 0.3s; 
+            -webkit-appearance: none; 
+            appearance: none;
+            margin: 0;
         }
         input:focus, select:focus { border-color: var(--primary-blue); outline: none; background: white; box-shadow: 0 0 0 3px rgba(0, 51, 160, 0.1); }
         
+        /* 下拉選單自訂箭頭 */
+        select {
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%230033A0%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 12px auto;
+            padding-right: 40px;
+        }
+
         .same-donor-box { background: rgba(0, 51, 160, 0.05); padding: 12px 15px; border-radius: 12px; margin-bottom: 15px; display: none; border: 1px solid rgba(0, 51, 160, 0.1); }
         .same-donor-label { display: flex; align-items: center; cursor: pointer; color: var(--primary-blue); font-size: 15px; margin: 0; font-weight: bold; }
         .same-donor-label input { width: 18px; height: 18px; margin-right: 10px; }
@@ -153,19 +172,17 @@
         /* ================= 終極手機版排版優化 ================= */
         @media screen and (max-width: 600px) {
             body { 
-                /* 取消置中，確保頂部不會被推出螢幕 */
                 display: block; 
-                background: var(--bg-color); /* 手機版背景改為乾淨底色 */
+                background: var(--bg-color); 
             }
             .container {
                 width: 100%;
-                height: 100%; /* 完美貼合螢幕 */
+                height: 100%; 
                 max-height: none;
                 border-radius: 0;
                 border: none;
                 box-shadow: none;
             }
-            /* 加入 iPhone 安全區域 padding，防止瀏海與底部橫條遮擋 */
             .page { padding-bottom: calc(40px + env(safe-area-inset-bottom)); }
             .app-header { padding-top: max(20px, env(safe-area-inset-top)); }
         }
@@ -323,7 +340,7 @@
                     <div class="ui-card">
                         <div class="section-title">付款詳情</div>
                         <details>
-                            <summary>💳 查看 3 種付款方式</summary>
+                            <summary>💳 查看 3 種付款方式 (點擊展開及收合)</summary>
                             <div class="details-content">
                                 <p><strong>1. 銀行轉帳（電子轉帳/櫃員機轉帳）</strong><br>
                                 銀行：滙豐銀行<br>銀行編號：004<br>戶口號碼：456-450485-001<br>戶口名稱：藍田循道衞理小學法團校董會
@@ -393,7 +410,6 @@
         function switchPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-            // 切換頁面時自動回到最頂端，解決手機版長頁面切換問題
             document.getElementById(pageId).scrollTop = 0;
         }
 
